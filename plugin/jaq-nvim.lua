@@ -26,5 +26,6 @@ vim.cmd([[
     endfunction
 
     command! -nargs=? -complete=customlist,JaqCompletion Jaq :lua require('jaq-nvim').Jaq(<f-args>)
+    command! -nargs=? -complete=customlist,JaqCompletion JaqBuild :lua require('jaq-nvim').JaqBuild(<f-args>)
     command! -nargs=? -complete=customlist,JaqRunCompletion JaqRun :lua require('jaq-nvim').JaqRun(<f-args>)
 ]])

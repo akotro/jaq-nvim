@@ -6,6 +6,11 @@ local config = {
         external = {},
     },
 
+    build_cmds = {
+        internal = {},
+        external = {},
+    },
+
     behavior = {
         default = "float",
         startinsert = false,
@@ -285,6 +290,34 @@ function M.Jaq(type)
     end
 
     run(type)
+end
+
+function M.JaqBuild(type)
+    local file = io.open(vim.fn.expand("%:p:h") .. "/.jaq.json", "r")
+
+    -- Check if the filetype is in config.cmds.internal
+    if vim.tbl_contains(vim.tbl_keys(config.build_cmds.internal), vim.bo.filetype) then
+        -- Exit if the type was passed and isn't "internal"
+        if type and type ~= "internal" then
+            vim.cmd("echohl ErrorMsg | echo 'Error: Invalid type for internal command' | echohl None")
+            return
+        end
+        type = "internal"
+    else
+        type = type or config.behavior.default
+    end
+
+    if file then
+        project(type, file)
+        return
+    end
+
+    if type == "internal" then
+        internal()
+        return
+    end
+
+    run("quickfix", config.build_cmds.external[vim.bo.filetype])
 end
 
 function M.JaqRun(type)
